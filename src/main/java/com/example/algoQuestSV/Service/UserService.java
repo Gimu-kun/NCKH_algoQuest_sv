@@ -9,16 +9,10 @@ import com.example.algoQuestSV.Repository.UsersRepository;
 import com.example.algoQuestSV.Utils.JwtUtils;
 import com.example.algoQuestSV.Utils.PasswordsUtils;
 import com.example.algoQuestSV.Utils.UploadUtils;
-import jakarta.validation.Valid;
-import org.jspecify.annotations.Nullable;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.File;
-import java.nio.file.Files;
-import java.nio.file.Paths;
-import java.util.Base64;
 import java.util.List;
 import java.util.Optional;
 
@@ -36,6 +30,9 @@ public class UserService {
     @Autowired
     UploadUtils uploadUtils;
 
+    @Autowired
+    StreakService streakService;
+
     public ApiResponseDto<User> createUser(UserCreationDto req, MultipartFile avatar){
         if (usersRepository.existsByUsername(req.getUsername())){
             return ApiResponseDto.<User>builder()
@@ -46,8 +43,8 @@ public class UserService {
         }
 
         try{
-            String avatarPath = null;
-            if (avatar != null){
+            String avatarPath = "https://www.google.com/url?sa=i&url=https%3A%2F%2Fvdostavka.ru%2Fno-avatar%2F&psig=AOvVaw0HO_umZAEBEgRvvwOOVj0b&ust=1764241620525000&source=images&cd=vfe&opi=89978449&ved=0CBIQjRxqFwoTCLCXxqzWj5EDFQAAAAAdAAAAABAE";
+            if (!avatar.isEmpty()){
                 avatarPath = uploadUtils.uploadAvatar(avatar,req.getUsername());
             }
 
@@ -101,6 +98,8 @@ public class UserService {
                     .build();
         }
         String token = jwtUtils.createToken(user);
+        //Kiểm tra streak khi đang nhập
+        streakService.checkUpdate(user);
         return ApiResponseDto.<String>builder()
                 .status(200)
                 .message("Đăng nhập thành công!")

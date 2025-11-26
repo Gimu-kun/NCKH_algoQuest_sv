@@ -7,6 +7,7 @@ import lombok.*;
 import org.hibernate.validator.constraints.Length;
 
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.UUID;
 
 @Entity
@@ -14,6 +15,7 @@ import java.util.UUID;
 @AllArgsConstructor
 @Getter
 @Setter
+@Builder
 @Table(name = "users")
 public class User {
     @Id
@@ -39,26 +41,22 @@ public class User {
 
     private Boolean role = false;
 
+    private Integer woods;
+
+    private Integer stones;
+
     @Column(name = "created_at", insertable = false, updatable = false)
     private LocalDateTime createdAt;
 
     @Column(name = "updated_at", insertable = false, updatable = false)
     private LocalDateTime updatedAt;
 
-    @Builder
-    public User(String username, String passwords, String firstName, String lastName, String avatar, Boolean role) {
-        id = "U-" + UUID.randomUUID().toString().replace("-","").substring(0,5);
-        this.username = username;
-        this.passwords = passwords;
-        this.firstName = firstName;
-        this.lastName = lastName;
-        this.avatar = avatar;
-        this.role = role != null ? role : false;
-    }
+    @OneToMany(mappedBy = "user",cascade = CascadeType.ALL)
+    private List<Streak> streaks;
 
     @PrePersist
     protected void onCreate() {
-        if (id == null) id = "U-" + UUID.randomUUID().toString().replace("-", "").substring(0,5);
+        if (id == null) id = "U-" + UUID.randomUUID().toString().replace("-", "").trim().substring(0,5);
         if (createdAt == null) createdAt = LocalDateTime.now();
         updatedAt = LocalDateTime.now();
     }
