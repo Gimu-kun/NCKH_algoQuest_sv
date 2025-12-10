@@ -1,5 +1,6 @@
 package com.example.algoQuestSV.Entity;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
@@ -26,7 +27,7 @@ public class Topic {
     @NotNull(message = "Tiêu đề chương không được để trống!")
     private String title;
 
-    private Boolean status = false;
+    private Boolean status;
 
     private String description;
 
@@ -46,10 +47,12 @@ public class Topic {
     private LocalDateTime updatedAt;
 
     @OneToMany(mappedBy = "topicId", cascade = CascadeType.ALL)
+    @JsonManagedReference
     private List<Quest> quests;
 
     @PrePersist
     protected void onCreate() {
+        status = false;
         if (id == null) id = "T-" + UUID.randomUUID().toString().replace("-", "").trim().substring(0,5);
         if (createdAt == null) createdAt = LocalDateTime.now();
         updatedAt = LocalDateTime.now();

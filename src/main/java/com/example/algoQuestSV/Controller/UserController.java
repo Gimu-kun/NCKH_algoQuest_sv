@@ -46,7 +46,7 @@ public class UserController {
     }
 
     @PatchMapping("/{id}")
-    public ResponseEntity<ApiResponseDto<User>> update(@Valid @ModelAttribute UserUpdateDto req, @RequestPart("avatar") MultipartFile avatar, @PathVariable String id){
+    public ResponseEntity<ApiResponseDto<User>> update(@Valid @ModelAttribute UserUpdateDto req, @RequestPart(value = "avatar", required = false) MultipartFile avatar, @PathVariable String id){
         ApiResponseDto<User> result = userService.update(req,id,avatar);
         return ResponseEntity.status(result.getStatus()).body(result);
     }

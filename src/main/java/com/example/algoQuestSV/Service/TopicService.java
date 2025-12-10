@@ -3,6 +3,7 @@ package com.example.algoQuestSV.Service;
 import com.example.algoQuestSV.Dto.Api.ApiResponseDto;
 import com.example.algoQuestSV.Dto.Topic.TopicCreationDto;
 import com.example.algoQuestSV.Dto.Topic.TopicUpdateDto;
+import com.example.algoQuestSV.Entity.Quest;
 import com.example.algoQuestSV.Entity.Topic;
 import com.example.algoQuestSV.Entity.User;
 import com.example.algoQuestSV.Repository.TopicsRepository;
@@ -65,6 +66,7 @@ public class TopicService {
             Topic topic = Topic.builder()
                     .title(req.getTitle())
                     .description(req.getDescription())
+                    .status(false)
                     .createdBy(operator)
                     .updatedBy(operator)
                     .indexOrder(getNewIndex())
