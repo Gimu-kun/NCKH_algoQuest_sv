@@ -15,6 +15,8 @@ import org.hibernate.type.SqlTypes;
 import org.hibernate.validator.constraints.Length;
 
 import java.time.LocalDateTime;
+import java.util.HashSet;
+import java.util.Set;
 import java.util.UUID;
 
 @Entity
@@ -26,11 +28,6 @@ import java.util.UUID;
 public class Quest {
     @Id
     private String id;
-
-    @Enumerated(EnumType.STRING)
-    @Column(name = "quest_type")
-    @JdbcTypeCode(SqlTypes.NAMED_ENUM)
-    private QuestType questType;
 
     @ManyToOne
     @JoinColumn(name = "topic_id")
@@ -56,6 +53,33 @@ public class Quest {
     @JoinColumn(name = "updated_by", referencedColumnName = "id")
     private User updatedBy;
 
+    @ManyToMany
+    @Builder.Default
+    @JoinTable(
+            name = "quests_lessons",
+            joinColumns = @JoinColumn(name = "quest_id"),
+            inverseJoinColumns = @JoinColumn(name = "lesson_id")
+    )
+    private Set<Lesson> lessons = new HashSet<>();
+
+    @ManyToMany
+    @Builder.Default
+    @JoinTable(
+            name = "quests_questions",
+            joinColumns = @JoinColumn(name = "quest_id"),
+            inverseJoinColumns = @JoinColumn(name = "question_id")
+    )
+    private Set<Question> questions = new HashSet<>();
+
+    @ManyToMany
+    @Builder.Default
+    @JoinTable(
+            name = "quests_visualizations",
+            joinColumns = @JoinColumn(name = "quest_id"),
+            inverseJoinColumns = @JoinColumn(name = "visualization_id")
+    )
+    private Set<Visualization> visualization = new HashSet<>();
+
     private LocalDateTime createdAt;
 
     private LocalDateTime updatedAt;
@@ -63,7 +87,7 @@ public class Quest {
     @PrePersist
     protected void onCreate() {
         status = false;
-        if (id == null) id = "Q-" + UUID.randomUUID().toString().replace("-", "").substring(0,5);
+        if (id == null) id = "Q-" + UUID.randomUUID().toString().replace("-", "").substring(0,6);
         if (createdAt == null) createdAt = LocalDateTime.now();
         updatedAt = LocalDateTime.now();
     }

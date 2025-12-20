@@ -1,26 +1,22 @@
 package com.example.algoQuestSV.Entity;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-@Entity
+@MappedSuperclass
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-@Table(name = "question_imgs")
-public class QuestionImgs {
+public abstract class AnswerBase {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
+    private String id;
 
     @Column(name = "question_id")
+    @NotNull(message = "Id câu hỏi không được để trống")
     private String questionId;
-
-    private String url;
-
-    @Column(name = "index_order")
-    private Integer indexOrder;
 }
+

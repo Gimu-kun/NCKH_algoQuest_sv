@@ -1,6 +1,7 @@
 package com.example.algoQuestSV.Service;
 
 import com.example.algoQuestSV.Dto.Api.ApiResponseDto;
+import com.example.algoQuestSV.Dto.Lesson.LessonCreationDto;
 import com.example.algoQuestSV.Dto.Quest.QuestCreationDto;
 import com.example.algoQuestSV.Dto.Quest.QuestUpdateDto;
 import com.example.algoQuestSV.Entity.Quest;
@@ -10,7 +11,9 @@ import com.example.algoQuestSV.Repository.QuestsRepository;
 import com.example.algoQuestSV.Repository.TopicsRepository;
 import com.example.algoQuestSV.Repository.UsersRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
@@ -26,6 +29,9 @@ public class QuestService {
     @Autowired
     TopicsRepository topicsRepository;
 
+    @Autowired
+    LessonService lessonService;
+
     //Lấy chỉ mục mới
     private Integer getNewIndex(String topicId) {
         return questsRepository
@@ -36,7 +42,12 @@ public class QuestService {
 
     //Lấy tất cả ải
     public ApiResponseDto<List<Quest>> getAll(){
-        List<Quest> quests = questsRepository.findAll();
+        List<Quest> quests = questsRepository.findAll(
+                Sort.by(
+                        Sort.Order.asc("topicId.id"),
+                        Sort.Order.asc("indexOrder")
+                )
+        );
         return ApiResponseDto.<List<Quest>>builder()
                 .status(200)
                 .message("Lấy dữ liệu chương thành công")
@@ -61,7 +72,7 @@ public class QuestService {
                 .build();
     }
 
-    //Tạo ải mới
+    //Tạo ải mới (trống)
     public ApiResponseDto<Quest> create(QuestCreationDto req){
         Optional<User> optUser = usersRepository.findById(req.getOperatorId());
 
@@ -77,7 +88,6 @@ public class QuestService {
 
         try{
             Quest quest = Quest.builder()
-                .questType(req.getQuestType())
                 .title(req.getTitle())
                 .description(req.getDescription())
                 .createdBy(operator)

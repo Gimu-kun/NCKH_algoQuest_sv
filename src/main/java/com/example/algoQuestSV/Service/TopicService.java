@@ -10,6 +10,7 @@ import com.example.algoQuestSV.Repository.TopicsRepository;
 import com.example.algoQuestSV.Repository.UsersRepository;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 
@@ -31,7 +32,7 @@ public class TopicService {
 
     //Lấy tất cả chương
     public ApiResponseDto<List<Topic>> getAll(){
-        List<Topic> topics = topicsRepository.findAll();
+        List<Topic> topics = topicsRepository.findAll(Sort.by(Sort.Direction.ASC, "indexOrder"));
         return ApiResponseDto.<List<Topic>>builder()
                 .status(200)
                 .message("Lấy dữ liệu chương thành công")
@@ -39,8 +40,20 @@ public class TopicService {
                 .build();
     }
 
+    //Sắp xếp lại các thứ tự
+    public void reindexTopics() {
+        List<Topic> topics = topicsRepository
+                .findAll(Sort.by(Sort.Direction.ASC, "indexOrder"));
+
+        int index = 1;
+        for (Topic topic : topics) {
+            topic.setIndexOrder(index++);
+        }
+
+        topicsRepository.saveAll(topics);
+    }
+
     //Tạo mới chương
-    @Transactional
     public ApiResponseDto<Topic> create(TopicCreationDto req){
         if (topicsRepository.existsByTitle(req.getTitle())){
             return ApiResponseDto.<Topic>builder()
@@ -89,6 +102,7 @@ public class TopicService {
     };
 
     //Cập nhật thông tin chương
+    @Transactional
     public ApiResponseDto<Topic> update(TopicUpdateDto req, String id){
         Optional<Topic> optionalTopic = topicsRepository.findById(id);
         if (optionalTopic.isEmpty()){
@@ -130,8 +144,14 @@ public class TopicService {
             topic.setIndexOrder(req.getIndexOrder());
         }
 
+        if (req.getStatus() != null){
+            topic.setStatus(req.getStatus());
+        }
+
+
         try{
             topicsRepository.save(topic);
+            reindexTopics();
 
             return ApiResponseDto.<Topic>builder()
                     .status(200)

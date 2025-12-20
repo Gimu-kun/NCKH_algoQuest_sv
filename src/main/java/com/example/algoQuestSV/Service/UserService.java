@@ -1,8 +1,10 @@
 package com.example.algoQuestSV.Service;
 
+import com.auth0.jwt.interfaces.DecodedJWT;
 import com.example.algoQuestSV.Dto.Api.ApiResponseDto;
 import com.example.algoQuestSV.Dto.Auth.LoginRequestDto;
 import com.example.algoQuestSV.Dto.User.UserCreationDto;
+import com.example.algoQuestSV.Dto.User.UserGeneralDto;
 import com.example.algoQuestSV.Dto.User.UserUpdateDto;
 import com.example.algoQuestSV.Entity.User;
 import com.example.algoQuestSV.Repository.UsersRepository;
@@ -171,5 +173,28 @@ public class UserService {
                 .message("Lấy thông tin người dùng thành công!")
                 .data(optUser.get())
                 .build();
+    }
+
+    public ApiResponseDto<UserGeneralDto> verify(String tk) {
+        try{
+            DecodedJWT jwt = jwtUtils.decodeToken(tk);
+            UserGeneralDto res = UserGeneralDto.builder()
+                    .id(jwt.getSubject())
+                    .fullname(jwt.getClaim("fullname").asString())
+                    .username(jwt.getClaim("username").asString())
+                    .role(jwt.getClaim("role").asBoolean())
+                    .build();
+            return ApiResponseDto.<UserGeneralDto>builder()
+                    .status(200)
+                    .message("Giải token thành công!")
+                    .data(res)
+                    .build();
+        }catch(Exception ex){
+            return ApiResponseDto.<UserGeneralDto>builder()
+                    .status(500)
+                    .message("Giải token thất bại!")
+                    .data(null)
+                    .build();
+        }
     }
 }

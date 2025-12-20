@@ -1,5 +1,10 @@
 server:
   port: 8080
+  tomcat:
+    max-part-count: 30
+
+file:
+  upload-dir: D:/uploads/
 
 spring:
   application:
@@ -8,11 +13,10 @@ spring:
     multipart:
       enabled: true
       max-file-size: 10MB
-      max-request-size: 10MB
+      max-request-size: 50MB
   datasource:
-    platform: postgres
     driverClassName: org.postgresql.Driver
-    url: jdbc:postgresql://localhost:5432/algoquest
+    url: jdbc:postgresql://localhost:5432/algoquest?stringtype=unspecified
     username: postgres
     password: June1996@
     jpa:
@@ -23,3 +27,6 @@ spring:
           dialect: org.hibernate.dialect.PostgreSQLDialect
           format-sql: true
         show-sql: true
+  sql:
+    init:
+      platform: postgres

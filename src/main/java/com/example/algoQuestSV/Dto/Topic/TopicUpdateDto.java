@@ -10,5 +10,7 @@ public class TopicUpdateDto{
 
     private Integer indexOrder;
 
+    private Boolean status;
+
     private String operatorId;
 }

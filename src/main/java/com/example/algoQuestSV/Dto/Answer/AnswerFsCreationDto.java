@@ -1,0 +1,11 @@
+package com.example.algoQuestSV.Dto.Answer;
+
+import lombok.Builder;
+import lombok.Data;
+
+@Data
+@Builder
+public class AnswerFsCreationDto {
+    private String answer;
+    private String synonyms;
+}

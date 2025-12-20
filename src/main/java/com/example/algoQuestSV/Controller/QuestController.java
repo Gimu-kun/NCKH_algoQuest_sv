@@ -1,6 +1,7 @@
 package com.example.algoQuestSV.Controller;
 
 import com.example.algoQuestSV.Dto.Api.ApiResponseDto;
+import com.example.algoQuestSV.Dto.Lesson.LessonCreationDto;
 import com.example.algoQuestSV.Dto.Quest.QuestCreationDto;
 import com.example.algoQuestSV.Dto.Quest.QuestUpdateDto;
 import com.example.algoQuestSV.Entity.Quest;

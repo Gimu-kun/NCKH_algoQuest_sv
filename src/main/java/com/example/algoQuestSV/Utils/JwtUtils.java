@@ -21,8 +21,7 @@ public class JwtUtils {
                     .withIssuer("auth0")
                     .withSubject(user.getId())
                     .withClaim("username", user.getUsername())
-                    .withClaim("firstName", user.getFirstName())
-                    .withClaim("lastName", user.getLastName())
+                    .withClaim("fullname", user.getFirstName() + user.getLastName())
                     .withClaim("role", user.getRole())
                     .sign(algorithm);
         } catch (JWTCreationException exception) {

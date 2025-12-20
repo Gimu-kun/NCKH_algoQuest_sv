@@ -1,5 +1,6 @@
 package com.example.algoQuestSV.Entity;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -52,11 +53,12 @@ public class User {
     private LocalDateTime updatedAt;
 
     @OneToMany(mappedBy = "user",cascade = CascadeType.ALL)
+    @JsonManagedReference
     private List<Streak> streaks;
 
     @PrePersist
     protected void onCreate() {
-        if (id == null) id = "U-" + UUID.randomUUID().toString().replace("-", "").trim().substring(0,5);
+        if (id == null) id = "U-" + UUID.randomUUID().toString().replace("-", "").trim().substring(0,6);
         if (createdAt == null) createdAt = LocalDateTime.now();
         updatedAt = LocalDateTime.now();
     }

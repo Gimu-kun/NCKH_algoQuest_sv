@@ -3,6 +3,7 @@ package com.example.algoQuestSV.Controller;
 import com.example.algoQuestSV.Dto.Api.ApiResponseDto;
 import com.example.algoQuestSV.Dto.Auth.LoginRequestDto;
 import com.example.algoQuestSV.Dto.User.UserCreationDto;
+import com.example.algoQuestSV.Dto.User.UserGeneralDto;
 import com.example.algoQuestSV.Dto.User.UserUpdateDto;
 import com.example.algoQuestSV.Entity.User;
 import com.example.algoQuestSV.Service.UserService;
@@ -48,6 +49,12 @@ public class UserController {
     @PatchMapping("/{id}")
     public ResponseEntity<ApiResponseDto<User>> update(@Valid @ModelAttribute UserUpdateDto req, @RequestPart(value = "avatar", required = false) MultipartFile avatar, @PathVariable String id){
         ApiResponseDto<User> result = userService.update(req,id,avatar);
+        return ResponseEntity.status(result.getStatus()).body(result);
+    }
+
+    @GetMapping("/token-verify")
+    public ResponseEntity<ApiResponseDto<UserGeneralDto>> verify(@RequestParam String tk){
+        ApiResponseDto<UserGeneralDto> result = userService.verify(tk);
         return ResponseEntity.status(result.getStatus()).body(result);
     }
 }
