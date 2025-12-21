@@ -3,14 +3,18 @@ import com.example.algoQuestSV.Dto.Answer.*;
 import com.example.algoQuestSV.Entity.Quest;
 import com.example.algoQuestSV.Enum.BloomType;
 import com.example.algoQuestSV.Enum.QuestionType;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
 @Data
 @Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class QuestionCreationDto {
     private QuestionType questionType;
     private String topicId;

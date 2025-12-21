@@ -4,9 +4,12 @@ import com.example.algoQuestSV.Dto.Api.ApiResponseDto;
 import com.example.algoQuestSV.Dto.Question.QuestionCreationDto;
 import com.example.algoQuestSV.Entity.Question;
 import com.example.algoQuestSV.Service.QuestionService;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.util.List;
@@ -23,8 +26,14 @@ public class QuestionController {
         return questionService.getAll();
     };
 
-    @PostMapping
-    public ApiResponseDto<Question> create(@Valid @ModelAttribute QuestionCreationDto req) throws IOException {
-        return questionService.create(req);
+    @PostMapping(consumes = { MediaType.MULTIPART_FORM_DATA_VALUE })
+    public ApiResponseDto<Question> create(
+            @RequestPart("question") String questionJson,
+            @RequestPart(value = "imgs", required = false) List<MultipartFile> imgs
+    ) throws IOException {
+        ObjectMapper objectMapper = new ObjectMapper();
+        QuestionCreationDto dto = objectMapper.readValue(questionJson, QuestionCreationDto.class);
+        dto.setImgs(imgs);
+        return questionService.create(dto);
     };
 }
