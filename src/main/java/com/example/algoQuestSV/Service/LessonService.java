@@ -125,4 +125,20 @@ public class LessonService {
                 .data(lessonRepository.findAll())
                 .build();
     }
+
+    public ApiResponseDto<Lesson> getById(String id) {
+        Optional<Lesson> optionalLesson = lessonRepository.findById(id);
+        if (optionalLesson.isPresent()){
+            return ApiResponseDto.<Lesson>builder()
+                    .status(200)
+                    .message("Lấy thông tin bài học thành công!")
+                    .data(optionalLesson.get())
+                    .build();
+        }
+        return ApiResponseDto.<Lesson>builder()
+                .status(404)
+                .message("Không tìm thấy thông tin bài học!")
+                .data(null)
+                .build();
+    }
 }

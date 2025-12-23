@@ -159,4 +159,20 @@ public class QuestionService {
                 .data(questionsRepository.findAll())
                 .build();
     }
+
+    public ApiResponseDto<Question> getById(String id) {
+        Optional<Question> optionalQuestion = questionsRepository.findById(id);
+        if (optionalQuestion.isPresent()){
+            return ApiResponseDto.<Question>builder()
+                    .status(200)
+                    .message("Lấy thông tin câu hỏi thành công!")
+                    .data(optionalQuestion.get())
+                    .build();
+        }
+        return ApiResponseDto.<Question>builder()
+                .status(404)
+                .message("Không tìm thấy thông tin câu hỏi!")
+                .data(null)
+                .build();
+    }
 }

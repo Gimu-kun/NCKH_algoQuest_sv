@@ -3,6 +3,7 @@ package com.example.algoQuestSV.Controller;
 import com.example.algoQuestSV.Dto.Api.ApiResponseDto;
 import com.example.algoQuestSV.Dto.Topic.TopicCreationDto;
 import com.example.algoQuestSV.Dto.Topic.TopicUpdateDto;
+import com.example.algoQuestSV.Entity.Quest;
 import com.example.algoQuestSV.Entity.Topic;
 import com.example.algoQuestSV.Service.TopicService;
 import jakarta.validation.Valid;

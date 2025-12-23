@@ -2,6 +2,7 @@ package com.example.algoQuestSV.Controller;
 
 import com.example.algoQuestSV.Dto.Api.ApiResponseDto;
 import com.example.algoQuestSV.Dto.Lesson.LessonCreationDto;
+import com.example.algoQuestSV.Dto.Quest.QuestContentAdjustDto;
 import com.example.algoQuestSV.Dto.Quest.QuestCreationDto;
 import com.example.algoQuestSV.Dto.Quest.QuestUpdateDto;
 import com.example.algoQuestSV.Entity.Quest;
@@ -41,13 +42,30 @@ public class QuestController {
         return questService.update(req,id);
     }
 
-    @PatchMapping("/add-to-topic")
-    public ApiResponseDto<Quest> addToTopic(@RequestParam String topic, @RequestParam String quest){
-        return questService.addQuestToTopic(topic,quest);
-    }
-
     @PatchMapping("/order-update")
     public ApiResponseDto<Quest> changeOrderIndex(@RequestParam Integer order, @RequestParam String quest){
         return questService.changeOrderIndex(quest,order);
+    }
+
+    @PatchMapping("cont-adj/{id}")
+    public ApiResponseDto<Quest> contentAdjust(@RequestBody QuestContentAdjustDto req, @PathVariable String id){
+        return questService.contentAdjust(id,req);
+    }
+
+    @PatchMapping("/add-to-topic")
+    public ApiResponseDto<Quest> addToTopic(
+            @RequestParam String topic,
+            @RequestParam String quest) {
+        return questService.addQuestToTopic(topic, quest);
+    }
+
+    @PatchMapping("/remove-from-topic/{id}")
+    public ApiResponseDto<Quest> removeFromTopic(@PathVariable String id) {
+        return questService.removeQuestFromTopic(id);
+    }
+
+    @PatchMapping("/reorder")
+    public ApiResponseDto<String> reorder(@RequestBody List<String> questIds) {
+        return questService.reorderQuests(questIds);
     }
 }

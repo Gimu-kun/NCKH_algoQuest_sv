@@ -22,6 +22,11 @@ public class LessonController {
         return lessonService.getAll();
     }
 
+    @GetMapping("/{id}")
+    public ApiResponseDto<Lesson> getById(@PathVariable String id){
+        return lessonService.getById(id);
+    }
+
     @PostMapping
     public ApiResponseDto<Lesson> create(@Valid @ModelAttribute LessonCreationDto req){
         System.out.println(req.toString());

@@ -6,6 +6,7 @@ import com.example.algoQuestSV.Dto.Topic.TopicUpdateDto;
 import com.example.algoQuestSV.Entity.Quest;
 import com.example.algoQuestSV.Entity.Topic;
 import com.example.algoQuestSV.Entity.User;
+import com.example.algoQuestSV.Repository.QuestsRepository;
 import com.example.algoQuestSV.Repository.TopicsRepository;
 import com.example.algoQuestSV.Repository.UsersRepository;
 import jakarta.transaction.Transactional;
@@ -24,6 +25,9 @@ public class TopicService {
 
     @Autowired
     UsersRepository usersRepository;
+
+    @Autowired
+    QuestsRepository questsRepository;
 
     //Lấy chỉ mục mới
     private Integer getNewIndex(){

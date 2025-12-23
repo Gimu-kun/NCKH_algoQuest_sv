@@ -1,6 +1,8 @@
 package com.example.algoQuestSV.Entity;
 
 import com.example.algoQuestSV.Enum.QuestType;
+import com.example.algoQuestSV.Service.QuestLesson;
+import com.example.algoQuestSV.Service.QuestQuestion;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
@@ -15,9 +17,7 @@ import org.hibernate.type.SqlTypes;
 import org.hibernate.validator.constraints.Length;
 
 import java.time.LocalDateTime;
-import java.util.HashSet;
-import java.util.Set;
-import java.util.UUID;
+import java.util.*;
 
 @Entity
 @Data
@@ -31,7 +31,7 @@ public class Quest {
 
     @ManyToOne
     @JoinColumn(name = "topic_id")
-    @JsonIgnoreProperties({"quests"})
+    @JsonIgnoreProperties({"quests", "handler", "hibernateLazyInitializer"})
     private Topic topicId;
 
     @Length(min = 10, message = "Tiêu đề ải tối thiểu phải có 10 chữ cái")
@@ -47,38 +47,21 @@ public class Quest {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "created_by", referencedColumnName = "id")
+    @JsonIgnoreProperties({"handler", "hibernateLazyInitializer", "password", "role"})
     private User createdBy;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "updated_by", referencedColumnName = "id")
+    @JsonIgnoreProperties({"handler", "hibernateLazyInitializer", "password", "role"})
     private User updatedBy;
 
-    @ManyToMany
-    @Builder.Default
-    @JoinTable(
-            name = "quests_lessons",
-            joinColumns = @JoinColumn(name = "quest_id"),
-            inverseJoinColumns = @JoinColumn(name = "lesson_id")
-    )
-    private Set<Lesson> lessons = new HashSet<>();
+    @OneToMany(mappedBy = "quest", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonIgnoreProperties("quest")
+    private List<QuestLesson> lessons = new ArrayList<>();
 
-    @ManyToMany
-    @Builder.Default
-    @JoinTable(
-            name = "quests_questions",
-            joinColumns = @JoinColumn(name = "quest_id"),
-            inverseJoinColumns = @JoinColumn(name = "question_id")
-    )
-    private Set<Question> questions = new HashSet<>();
-
-    @ManyToMany
-    @Builder.Default
-    @JoinTable(
-            name = "quests_visualizations",
-            joinColumns = @JoinColumn(name = "quest_id"),
-            inverseJoinColumns = @JoinColumn(name = "visualization_id")
-    )
-    private Set<Visualization> visualization = new HashSet<>();
+    @OneToMany(mappedBy = "quest", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonIgnoreProperties("quest")
+    private List<QuestQuestion> questions = new ArrayList<>();
 
     private LocalDateTime createdAt;
 

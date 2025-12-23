@@ -26,6 +26,11 @@ public class QuestionController {
         return questionService.getAll();
     };
 
+    @GetMapping("/{id}")
+    public ApiResponseDto<Question> getAll(@PathVariable String id){
+        return questionService.getById(id);
+    };
+
     @PostMapping(consumes = { MediaType.MULTIPART_FORM_DATA_VALUE })
     public ApiResponseDto<Question> create(
             @RequestPart("question") String questionJson,
@@ -36,4 +41,5 @@ public class QuestionController {
         dto.setImgs(imgs);
         return questionService.create(dto);
     };
+
 }
