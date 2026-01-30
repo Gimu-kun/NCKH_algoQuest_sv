@@ -10,6 +10,8 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class AnswerFsCreationDto {
+    private String id;
+    private String questionId;
     private String answer;
     private String synonyms;
 }

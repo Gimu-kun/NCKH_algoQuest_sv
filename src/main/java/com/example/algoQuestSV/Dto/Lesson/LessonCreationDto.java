@@ -19,11 +19,6 @@ import java.util.List;
 public class LessonCreationDto {
     @Length(min = 4)
     private String title;
-
-    @NotNull(message = "Nội dung bài học không được để trống")
-    private String content;
-
-    private List<MultipartFile> images;
-
+    private String topic_id;
     private String operatorId;
 }

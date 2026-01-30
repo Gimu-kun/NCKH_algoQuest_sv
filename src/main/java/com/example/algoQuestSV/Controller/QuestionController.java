@@ -42,4 +42,16 @@ public class QuestionController {
         return questionService.create(dto);
     };
 
+    @PutMapping(value = "/{id}", consumes = { MediaType.MULTIPART_FORM_DATA_VALUE })
+    public ApiResponseDto<Question> update(
+            @PathVariable String id,
+            @RequestPart("question") String questionJson,
+            @RequestPart(value = "imgs", required = false) List<MultipartFile> imgs
+    ) throws IOException {
+        ObjectMapper objectMapper = new ObjectMapper();
+        QuestionCreationDto dto = objectMapper.readValue(questionJson, QuestionCreationDto.class);
+        dto.setImgs(imgs);
+        return questionService.update(id, dto);
+    }
+
 }

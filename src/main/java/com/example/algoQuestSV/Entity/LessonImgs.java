@@ -17,9 +17,9 @@ public class LessonImgs {
     @Id
     private String id;
 
-    @Column(name = "lesson_id")
-    @NotNull(message = "ID bài học không được trống")
-    private String lessonId;
+    @Column(name = "section_id")
+    @NotNull(message = "ID mục bài học không được trống")
+    private String sectionId;
 
     @NotNull(message = "Đường dẫn hình ảnh không được trống")
     private String url;

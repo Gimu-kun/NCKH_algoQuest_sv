@@ -10,6 +10,8 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class AnswerFnCreationDto {
+    private String id;
+    private String questionId;
     private Double answer;
     private Double tolerance;
 }

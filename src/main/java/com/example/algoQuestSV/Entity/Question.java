@@ -51,23 +51,38 @@ public class Question {
     @JoinColumn(name = "updated_by", referencedColumnName = "id")
     private User updatedBy;
 
-    @OneToMany(fetch = FetchType.LAZY)
+    @OneToMany(
+            fetch = FetchType.LAZY,
+            cascade = CascadeType.ALL,
+            orphanRemoval = true)
     @JoinColumn(name = "question_id", insertable = false, updatable = false)
     private List<AnswersFn> fnAnswers;
 
-    @OneToMany(fetch = FetchType.LAZY)
+    @OneToMany(
+            fetch = FetchType.LAZY,
+            cascade = CascadeType.ALL,
+            orphanRemoval = true)
     @JoinColumn(name = "question_id", insertable = false, updatable = false)
     private List<AnswersFns> fnsAnswers;
 
-    @OneToMany(fetch = FetchType.LAZY)
+    @OneToMany(
+            fetch = FetchType.LAZY,
+            cascade = CascadeType.ALL,
+            orphanRemoval = true)
     @JoinColumn(name = "question_id", insertable = false, updatable = false)
     private List<AnswersFs> fsAnswers;
 
-    @OneToMany(fetch = FetchType.LAZY)
+    @OneToMany(
+            fetch = FetchType.LAZY,
+            cascade = CascadeType.ALL,
+            orphanRemoval = true)
     @JoinColumn(name = "question_id", insertable = false, updatable = false)
     private List<AnswersMcq> mcqAnswers;
 
-    @OneToMany(fetch = FetchType.LAZY)
+    @OneToMany(
+            fetch = FetchType.LAZY,
+            cascade = CascadeType.ALL,
+            orphanRemoval = true)
     @JoinColumn(name = "question_id", insertable = false, updatable = false)
     private List<AnswersMp> mpAnswers;
 

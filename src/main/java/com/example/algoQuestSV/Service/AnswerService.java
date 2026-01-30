@@ -2,6 +2,7 @@ package com.example.algoQuestSV.Service;
 import com.example.algoQuestSV.Dto.Answer.*;
 import com.example.algoQuestSV.Dto.Api.ApiResponseDto;
 import com.example.algoQuestSV.Entity.*;
+import com.example.algoQuestSV.Enum.QuestionType;
 import com.example.algoQuestSV.Repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -22,6 +23,9 @@ public class AnswerService {
 
     @Autowired
     AnswersMpRepository answersMpRepository;
+
+    @Autowired
+    QuestionsRepository questionsRepository;
 
     public void create(AnswerFnCreationDto req, String questionId){
         AnswersFn answersFn = new AnswersFn(req.getAnswer(), req.getTolerance());
@@ -47,9 +51,18 @@ public class AnswerService {
         answersMcqRepository.save(answersMcq);
     }
 
-    public void create(AnswerMpCreationDto req, String questionId){
-        AnswersMp answersMp = new AnswersMp(req.getColumn1(),req.getColumn2());
-        answersMp.setQuestionId(questionId);
-        answersMpRepository.save(answersMp);
+    public void create(AnswerMpCreationDto req, String questionId) {
+
+    }
+
+    public void deleteAnswersByQuestionId(String id) {
+        Question question = questionsRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Không tìm thấy câu hỏi"));
+
+        question.getFsAnswers().clear();
+        question.getFnAnswers().clear();
+        question.getMpAnswers().clear();
+        question.getMcqAnswers().clear();
+        question.getFnsAnswers().clear();
     }
 }

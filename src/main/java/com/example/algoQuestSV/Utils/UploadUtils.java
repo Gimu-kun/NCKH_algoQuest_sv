@@ -1,51 +1,55 @@
 package com.example.algoQuestSV.Utils;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.File;
+import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.Base64;
 
 @Component
 public class UploadUtils {
-    private String uploadDir = "D:/uploads/";
+    @Value("${file.upload-dir}")
+    private String uploadDir;
 
-    public String uploadAvatar(MultipartFile avatarFile, String username){
-        try {
-            if (avatarFile.isEmpty()) {
-                throw new IllegalArgumentException("File avatar không hợp lệ.");
-            }
+    public String uploadAvatar(MultipartFile avatarFile, String username) throws IOException {
 
-            String fileExtension = ".jpg"; // Đặt mặc định là .jpg
-            String mimeType = avatarFile.getContentType();
-
-            if (mimeType != null) {
-                if (mimeType.contains("png")) {
-                    fileExtension = ".png";
-                } else if (mimeType.contains("gif")) {
-                    fileExtension = ".gif";
-                }
-            }
-
-            String uniqueFileName = "avatar_" + username + fileExtension;
-
-            // Lưu file vào thư mục upload
-            File uploadDirFile = new File(uploadDir);
-            if (!uploadDirFile.exists()) {
-                uploadDirFile.mkdirs();
-            }
-
-            Path dest = Paths.get(uploadDir + File.separator + uniqueFileName);
-            avatarFile.transferTo(dest.toFile());
-
-            return "/uploads/" + uniqueFileName;
-        } catch (Exception e) {
-            // Log lỗi và trả về thông báo lỗi
-            e.printStackTrace();
-            return "Có lỗi xảy ra khi tải ảnh lên";
+        if (avatarFile == null || avatarFile.isEmpty()) {
+            throw new IllegalArgumentException("File avatar không hợp lệ");
         }
+
+        // Xác định extension an toàn
+        String contentType = avatarFile.getContentType();
+        String extension = ".jpg"; // mặc định
+
+        if (contentType != null) {
+            if (contentType.contains("png")) {
+                extension = ".png";
+            } else if (contentType.contains("gif")) {
+                extension = ".gif";
+            }
+        }
+
+        String fileName = "avatar_" + username + extension;
+
+        // 🔥 Resolve path đúng cách
+        Path uploadPath = Paths.get(uploadDir)
+                .toAbsolutePath()
+                .normalize();
+
+        // 🔥 BẮT BUỘC tạo thư mục
+        if (!Files.exists(uploadPath)) {
+            Files.createDirectories(uploadPath);
+        }
+
+        Path destination = uploadPath.resolve(fileName);
+
+        // Lưu file
+        avatarFile.transferTo(destination.toFile());
+
+        // Trả về path public (dùng cho frontend)
+        return "/uploads/" + fileName;
     }
 }

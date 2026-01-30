@@ -9,6 +9,8 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class AnswerMpCreationDto {
+    private String id;
+    private String questionId;
     private String column1;
     private String column2;
 }

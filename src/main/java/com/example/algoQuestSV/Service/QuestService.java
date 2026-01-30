@@ -1,7 +1,6 @@
 package com.example.algoQuestSV.Service;
 
 import com.example.algoQuestSV.Dto.Api.ApiResponseDto;
-import com.example.algoQuestSV.Dto.Lesson.LessonCreationDto;
 import com.example.algoQuestSV.Dto.Quest.BaseQuestContentDto;
 import com.example.algoQuestSV.Dto.Quest.QuestContentAdjustDto;
 import com.example.algoQuestSV.Dto.Quest.QuestCreationDto;
@@ -13,10 +12,8 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
-import java.util.Set;
 
 @Service
 public class QuestService {
@@ -80,17 +77,8 @@ public class QuestService {
 
     //Tạo ải mới (trống)
     public ApiResponseDto<Quest> create(QuestCreationDto req){
-        Optional<User> optUser = usersRepository.findById(req.getOperatorId());
-
-        if (optUser.isEmpty()){
-            return ApiResponseDto.<Quest>builder()
-                    .status(400)
-                    .message("ID người thao tác không hợp lệ!")
-                    .data(null)
-                    .build();
-        }
-
-        User operator = optUser.get();
+        User operator = usersRepository.findById(req.getOperatorId())
+                .orElseThrow(()->new RuntimeException("ID người thao tác không hợp lệ!"));
 
         try{
             Quest quest = Quest.builder()

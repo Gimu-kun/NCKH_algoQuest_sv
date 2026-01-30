@@ -6,4 +6,5 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface LessonImgsRepository extends JpaRepository<LessonImgs,String> {
+    void deleteBySectionId(String sectionId);
 }

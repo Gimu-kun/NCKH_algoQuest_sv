@@ -1,60 +1,48 @@
 package com.example.algoQuestSV.Entity;
 
-import jakarta.annotation.Nullable;
 import jakarta.persistence.*;
-import jakarta.validation.constraints.Min;
-import jakarta.validation.constraints.NotNull;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import org.hibernate.validator.constraints.Length;
-
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
 
-
 @Data
-@AllArgsConstructor
-@NoArgsConstructor
 @Entity
 @Table(name = "lessons")
-public class  Lesson {
+@AllArgsConstructor
+@NoArgsConstructor
+public class Lesson {
     @Id
     private String id;
 
     @Length(min = 4)
     private String title;
 
-    @NotNull(message = "Nội dung bài học không được để trống")
-    private String content;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "topic_id")
+    private Topic topic;
 
-    @OneToMany(fetch = FetchType.LAZY)
-    @JoinColumn(name = "lesson_id", insertable = false, updatable = false)
-    private List<LessonImgs> lessonImgs;
-
+    // Quan hệ với các Section cấp 1 (H1), tự động xóa con khi xóa cha
+    @OneToMany(mappedBy = "lessonId", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OrderBy("orderIndex ASC")
+    private List<LessonSection> sections;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "created_by", referencedColumnName = "id")
+    @JoinColumn(name = "created_by")
     private User createdBy;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "updated_by", referencedColumnName = "id")
+    @JoinColumn(name = "updated_by")
     private User updatedBy;
 
     private LocalDateTime createdAt;
-
     private LocalDateTime updatedAt;
 
     @PrePersist
     protected void onCreate() {
-        if (id == null) id = "L-" + UUID.randomUUID().toString().replace("-", "").substring(0,6);
-        if (createdAt == null) createdAt = LocalDateTime.now();
-        updatedAt = LocalDateTime.now();
-    }
-
-    @PreUpdate
-    protected void onUpdate() {
-        updatedAt = LocalDateTime.now();
+        if (id == null) id = "L-" + UUID.randomUUID().toString().substring(0, 8);
+        this.createdAt = LocalDateTime.now();
+        this.updatedAt = LocalDateTime.now();
     }
 }

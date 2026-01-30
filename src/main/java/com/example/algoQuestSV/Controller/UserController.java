@@ -13,6 +13,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.List;
 
 @RestController
@@ -47,7 +48,7 @@ public class UserController {
     }
 
     @PatchMapping("/{id}")
-    public ResponseEntity<ApiResponseDto<User>> update(@Valid @ModelAttribute UserUpdateDto req, @RequestPart(value = "avatar", required = false) MultipartFile avatar, @PathVariable String id){
+    public ResponseEntity<ApiResponseDto<User>> update(@Valid @ModelAttribute UserUpdateDto req, @RequestPart(value = "avatar", required = false) MultipartFile avatar, @PathVariable String id) throws IOException {
         ApiResponseDto<User> result = userService.update(req,id,avatar);
         return ResponseEntity.status(result.getStatus()).body(result);
     }

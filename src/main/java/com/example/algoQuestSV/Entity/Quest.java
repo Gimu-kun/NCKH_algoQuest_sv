@@ -1,10 +1,5 @@
 package com.example.algoQuestSV.Entity;
 
-import com.example.algoQuestSV.Enum.QuestType;
-import com.example.algoQuestSV.Service.QuestLesson;
-import com.example.algoQuestSV.Service.QuestQuestion;
-import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
@@ -12,8 +7,6 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.hibernate.annotations.JdbcTypeCode;
-import org.hibernate.type.SqlTypes;
 import org.hibernate.validator.constraints.Length;
 
 import java.time.LocalDateTime;

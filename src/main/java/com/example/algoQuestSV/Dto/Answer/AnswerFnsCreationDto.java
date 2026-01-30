@@ -10,5 +10,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class AnswerFnsCreationDto {
+    private String id;
+    private String questionId;
     private String answer;
 }

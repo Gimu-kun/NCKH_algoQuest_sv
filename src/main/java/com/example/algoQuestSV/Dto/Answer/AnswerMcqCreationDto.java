@@ -11,6 +11,8 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class AnswerMcqCreationDto {
+    private String id;
+    private String questionId;
     private String content;
     private Boolean isCorrect;
 }

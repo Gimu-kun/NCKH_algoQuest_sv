@@ -1,7 +1,5 @@
-package com.example.algoQuestSV.Service;
+package com.example.algoQuestSV.Entity;
 
-import com.example.algoQuestSV.Entity.Quest;
-import com.example.algoQuestSV.Entity.Question;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;

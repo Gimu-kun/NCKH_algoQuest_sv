@@ -4,7 +4,7 @@ server:
     max-part-count: 30
 
 file:
-  upload-dir: D:/uploads/
+  upload-dir: uploads/
 
 spring:
   application:
