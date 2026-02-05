@@ -42,12 +42,20 @@ public class Question {
     private Integer indexOrder;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JsonIgnoreProperties({"hibernateLazyInitializer", "handler", "streaks"})
+    @JsonIgnoreProperties({
+            "passwords", "streaks", "hibernateLazyInitializer",
+            "handler", "firstName", "lastName", "avatar",
+            "role", "level", "exp", "woods", "stones", "point", "gold"
+    })
     @JoinColumn(name = "created_by", referencedColumnName = "id")
     private User createdBy;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JsonIgnoreProperties({"hibernateLazyInitializer", "handler", "streaks"})
+    @JsonIgnoreProperties({
+            "passwords", "streaks", "hibernateLazyInitializer",
+            "handler", "firstName", "lastName", "avatar",
+            "role", "level", "exp", "woods", "stones", "point", "gold"
+    })
     @JoinColumn(name = "updated_by", referencedColumnName = "id")
     private User updatedBy;
 

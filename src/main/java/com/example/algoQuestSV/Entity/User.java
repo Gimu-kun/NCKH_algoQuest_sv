@@ -42,9 +42,17 @@ public class User {
 
     private Boolean role = false;
 
-    private Integer woods;
+    private Integer level = 1;
 
-    private Integer stones;
+    private Integer exp = 0;
+
+    private Integer woods = 0;
+
+    private Integer stones = 0;
+
+    private Integer point = 100;
+
+    private Integer gold = 0;
 
     @Column(name = "created_at", insertable = false, updatable = false)
     private LocalDateTime createdAt;

@@ -36,6 +36,7 @@ public class QuestionController {
             @RequestPart("question") String questionJson,
             @RequestPart(value = "imgs", required = false) List<MultipartFile> imgs
     ) throws IOException {
+        System.out.println("vào tới đây rồi nè!");
         ObjectMapper objectMapper = new ObjectMapper();
         QuestionCreationDto dto = objectMapper.readValue(questionJson, QuestionCreationDto.class);
         dto.setImgs(imgs);

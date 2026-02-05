@@ -181,10 +181,22 @@ public class UserService {
             DecodedJWT jwt = jwtUtils.decodeToken(tk);
             UserGeneralDto res = UserGeneralDto.builder()
                     .id(jwt.getSubject())
-                    .fullname(jwt.getClaim("fullname").asString())
+                    .firstname(jwt.getClaim("firstname").asString())
+                    .lastname(jwt.getClaim("lastname").asString())
                     .username(jwt.getClaim("username").asString())
                     .role(jwt.getClaim("role").asBoolean())
                     .build();
+            Optional<User> optU = usersRepository.findById(res.getId());
+            if (optU.isPresent()){
+                User u = optU.get();
+                res.setLevel(u.getLevel());
+                res.setExp(u.getExp());
+                res.setWood(u.getWoods());
+                res.setStone(u.getStones());
+                res.setPoint(u.getPoint());
+                res.setGold(u.getGold());
+                res.setAvatar(u.getAvatar());
+            }
             return ApiResponseDto.<UserGeneralDto>builder()
                     .status(200)
                     .message("Giải token thành công!")

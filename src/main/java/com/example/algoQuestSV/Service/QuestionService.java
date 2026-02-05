@@ -137,6 +137,7 @@ public class QuestionService {
                     }
                     break;
                 case QuestionType.mp:
+                    System.out.println("vào tới đây rồi nè!222");
                     AnswerMpCreationDto[] answerMps = req.getAnswerMp();
                     for (AnswerMpCreationDto answerMp : answerMps) {
                         answerService.create(answerMp,question.getId());

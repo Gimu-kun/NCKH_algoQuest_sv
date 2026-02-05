@@ -1,5 +1,6 @@
 package com.example.algoQuestSV.Entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
@@ -36,10 +37,20 @@ public class Topic {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "created_by", referencedColumnName = "id")
+    @JsonIgnoreProperties({
+            "passwords", "streaks", "hibernateLazyInitializer",
+            "handler", "firstName", "lastName", "avatar",
+            "role", "level", "exp", "woods", "stones", "point", "gold"
+    })
     private User createdBy;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "updated_by", referencedColumnName = "id")
+    @JsonIgnoreProperties({
+            "passwords", "streaks", "hibernateLazyInitializer",
+            "handler", "firstName", "lastName", "avatar",
+            "role", "level", "exp", "woods", "stones", "point", "gold"
+    })
     private User updatedBy;
 
     private LocalDateTime createdAt;

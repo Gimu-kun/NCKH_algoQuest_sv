@@ -52,7 +52,9 @@ public class AnswerService {
     }
 
     public void create(AnswerMpCreationDto req, String questionId) {
-
+        AnswersMp answersMp = new AnswersMp(req.getColumn1(), req.getColumn2());
+        answersMp.setQuestionId(questionId);
+        answersMpRepository.save(answersMp);
     }
 
     public void deleteAnswersByQuestionId(String id) {

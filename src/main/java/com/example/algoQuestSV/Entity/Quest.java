@@ -40,12 +40,20 @@ public class Quest {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "created_by", referencedColumnName = "id")
-    @JsonIgnoreProperties({"handler", "hibernateLazyInitializer", "password", "role"})
+    @JsonIgnoreProperties({
+            "passwords", "streaks", "hibernateLazyInitializer",
+            "handler", "firstName", "lastName", "avatar",
+            "role", "level", "exp", "woods", "stones", "point", "gold"
+    })
     private User createdBy;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "updated_by", referencedColumnName = "id")
-    @JsonIgnoreProperties({"handler", "hibernateLazyInitializer", "password", "role"})
+    @JsonIgnoreProperties({
+            "passwords", "streaks", "hibernateLazyInitializer",
+            "handler", "firstName", "lastName", "avatar",
+            "role", "level", "exp", "woods", "stones", "point", "gold"
+    })
     private User updatedBy;
 
     @OneToMany(mappedBy = "quest", cascade = CascadeType.ALL, orphanRemoval = true)
