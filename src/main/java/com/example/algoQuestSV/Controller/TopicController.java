@@ -1,6 +1,7 @@
 package com.example.algoQuestSV.Controller;
 
 import com.example.algoQuestSV.Dto.Api.ApiResponseDto;
+import com.example.algoQuestSV.Dto.Quest.QuestUnlockStatusDto;
 import com.example.algoQuestSV.Dto.Topic.TopicCreationDto;
 import com.example.algoQuestSV.Dto.Topic.TopicUpdateDto;
 import com.example.algoQuestSV.Entity.Topic;
@@ -33,6 +34,17 @@ public class TopicController {
     @GetMapping("/{id}")
     public ResponseEntity<ApiResponseDto<Topic>> getUserById(@PathVariable String id){
         ApiResponseDto<Topic> result = topicService.getTopicById(id);
+        return ResponseEntity.status(result.getStatus()).body(result);
+    }
+
+    @GetMapping("/{topicId}/quests-status")
+    public ResponseEntity<ApiResponseDto<List<QuestUnlockStatusDto>>> getQuestsWithStatus(
+            @PathVariable String topicId,
+            @RequestParam String userId) {
+
+        ApiResponseDto<List<QuestUnlockStatusDto>> result =
+                topicService.getQuestsByTopicWithStatus(topicId, userId);
+
         return ResponseEntity.status(result.getStatus()).body(result);
     }
 

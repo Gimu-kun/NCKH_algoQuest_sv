@@ -2,12 +2,16 @@ package com.example.algoQuestSV.Controller;
 
 import com.example.algoQuestSV.Dto.Api.ApiResponseDto;
 import com.example.algoQuestSV.Dto.Question.QuestionCreationDto;
+import com.example.algoQuestSV.Dto.Quiz.QuizResultResponse;
+import com.example.algoQuestSV.Dto.Quiz.QuizSubmissionRequest;
 import com.example.algoQuestSV.Entity.Question;
 import com.example.algoQuestSV.Service.QuestionService;
+import com.example.algoQuestSV.Service.QuizService;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -20,6 +24,9 @@ import java.util.List;
 public class QuestionController {
     @Autowired
     QuestionService questionService;
+
+    @Autowired
+    QuizService quizService;
 
     @GetMapping
     public ApiResponseDto<List<Question>> getAll(){
@@ -55,4 +62,19 @@ public class QuestionController {
         return questionService.update(id, dto);
     }
 
+    @PostMapping("/submit-quiz")
+    public ResponseEntity<ApiResponseDto<QuizResultResponse>> submitQuiz(
+            @RequestBody QuizSubmissionRequest request
+    ) {
+        // Gọi service xử lý logic chấm điểm và lưu progress
+        QuizResultResponse result = quizService.submitQuiz(request);
+
+        // Trả về kết quả bọc trong ApiResponseDto chuẩn của bạn
+        ApiResponseDto<QuizResultResponse> response = new ApiResponseDto<>();
+        response.setData(result);
+        response.setMessage("Nộp bài thành công!");
+        response.setStatus(HttpStatus.OK.value());
+
+        return ResponseEntity.ok(response);
+    }
 }

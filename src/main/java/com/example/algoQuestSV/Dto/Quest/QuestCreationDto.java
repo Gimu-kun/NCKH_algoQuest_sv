@@ -11,6 +11,10 @@ public class QuestCreationDto {
     @NotNull(message = "Tiêu đề ải không được để trống!")
     private String title;
 
+    private Integer questNum;
+
+    private QuestType type;
+
     private String description;
 
     @NotNull(message = "ID người thao tác không được trống!")

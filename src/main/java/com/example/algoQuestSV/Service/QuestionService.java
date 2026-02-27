@@ -3,10 +3,12 @@ package com.example.algoQuestSV.Service;
 import com.example.algoQuestSV.Dto.Answer.AnswerMcqCreationDto;
 import com.example.algoQuestSV.Dto.Answer.AnswerMpCreationDto;
 import com.example.algoQuestSV.Dto.Api.ApiResponseDto;
-import com.example.algoQuestSV.Dto.Question.QuestionCreationDto;
+import com.example.algoQuestSV.Dto.Question.*;
 import com.example.algoQuestSV.Entity.*;
 import com.example.algoQuestSV.Enum.QuestionType;
 import com.example.algoQuestSV.Repository.*;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -35,6 +37,11 @@ public class QuestionService {
     UsersRepository usersRepository;
     @Autowired
     AnswerService answerService;
+    @Autowired
+    QuestProgressRepository progressRepo;
+
+    @Autowired
+    private ObjectMapper objectMapper;
 
     @Value("${file.upload-dir}")
     private String uploadDir;

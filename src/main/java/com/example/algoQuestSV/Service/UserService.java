@@ -56,6 +56,11 @@ public class UserService {
                     .passwords(passwordsUtils.hashPassword(req.getPasswords()))
                     .firstName(req.getFirstName().trim())
                     .lastName(req.getLastName().trim())
+                    .level(1)
+                    .point(100)
+                    .gold(0)
+                    .stones(0)
+                    .woods(0)
                     .avatar(avatarPath)
                     .role(req.getRole())
                     .build();
@@ -181,8 +186,8 @@ public class UserService {
             DecodedJWT jwt = jwtUtils.decodeToken(tk);
             UserGeneralDto res = UserGeneralDto.builder()
                     .id(jwt.getSubject())
-                    .firstname(jwt.getClaim("firstname").asString())
-                    .lastname(jwt.getClaim("lastname").asString())
+                    .firstName(jwt.getClaim("firstname").asString())
+                    .lastName(jwt.getClaim("lastname").asString())
                     .username(jwt.getClaim("username").asString())
                     .role(jwt.getClaim("role").asBoolean())
                     .build();
@@ -191,8 +196,8 @@ public class UserService {
                 User u = optU.get();
                 res.setLevel(u.getLevel());
                 res.setExp(u.getExp());
-                res.setWood(u.getWoods());
-                res.setStone(u.getStones());
+                res.setWoods(u.getWoods());
+                res.setStones(u.getStones());
                 res.setPoint(u.getPoint());
                 res.setGold(u.getGold());
                 res.setAvatar(u.getAvatar());

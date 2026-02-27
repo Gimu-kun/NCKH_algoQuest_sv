@@ -24,6 +24,9 @@ public class QuestQuestion {
     @JoinColumn(name = "question_id")
     private Question question;
 
-    private Double point;
-    private Double exp;
+    private Integer point;
+    private Integer exp;
+    private Integer gold;
+    private Integer stone;
+    private Integer wood;
 }

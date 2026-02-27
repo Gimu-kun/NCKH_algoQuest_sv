@@ -11,6 +11,9 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class BaseQuestContentDto {
     String id;
-    Double point;
-    Double exp;
+    Integer point;
+    Integer exp;
+    Integer gold;
+    Integer stone;
+    Integer wood;
 }

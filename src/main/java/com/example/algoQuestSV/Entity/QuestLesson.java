@@ -23,7 +23,4 @@ public class QuestLesson {
     @ManyToOne
     @JoinColumn(name = "lesson_id")
     private Lesson lesson;
-
-    private Double point;
-    private Double exp;
 }

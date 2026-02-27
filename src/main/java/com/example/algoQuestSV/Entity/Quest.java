@@ -1,5 +1,6 @@
 package com.example.algoQuestSV.Entity;
 
+import com.example.algoQuestSV.Enum.QuestType;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
@@ -26,6 +27,13 @@ public class Quest {
     @JoinColumn(name = "topic_id")
     @JsonIgnoreProperties({"quests", "handler", "hibernateLazyInitializer"})
     private Topic topicId;
+
+    @Column(name = "quest_num")
+    private Integer questNum;
+
+    @Enumerated(EnumType.STRING)
+    @Column(name = "quest_type", nullable = false)
+    private QuestType type = QuestType.lesson;
 
     @Length(min = 10, message = "Tiêu đề ải tối thiểu phải có 10 chữ cái")
     @NotNull(message = "Tiêu đề ải không được để trống!")
@@ -63,6 +71,18 @@ public class Quest {
     @OneToMany(mappedBy = "quest", cascade = CascadeType.ALL, orphanRemoval = true)
     @JsonIgnoreProperties("quest")
     private List<QuestQuestion> questions = new ArrayList<>();
+
+    @OneToMany(mappedBy = "quest", cascade = CascadeType.ALL)
+    @JsonIgnoreProperties("quest")
+    private List<QuestVisualization> visualizations = new ArrayList<>();
+
+    @OneToMany(mappedBy = "quest", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonIgnoreProperties("quest")
+    private List<QuestReward> rewards = new ArrayList<>();
+
+    @OneToMany(mappedBy = "quest", cascade = CascadeType.ALL)
+    @JsonIgnoreProperties("quest")
+    private List<QuestPrerequisite> prerequisites = new ArrayList<>();
 
     private LocalDateTime createdAt;
 

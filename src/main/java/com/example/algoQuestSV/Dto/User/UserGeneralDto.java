@@ -8,12 +8,12 @@ import lombok.Data;
 public class UserGeneralDto {
     private String id;
     private String username;
-    private String firstname;
-    private String lastname;
+    private String firstName;
+    private String lastName;
     private Integer level;
     private Integer exp;
-    private Integer wood;
-    private Integer stone;
+    private Integer woods;
+    private Integer stones;
     private Integer point;
     private Integer gold;
     private Boolean role;

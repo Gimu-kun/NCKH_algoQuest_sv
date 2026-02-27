@@ -1,11 +1,11 @@
 package com.example.algoQuestSV.Service;
 
 import com.example.algoQuestSV.Dto.Api.ApiResponseDto;
+import com.example.algoQuestSV.Dto.Quest.QuestUnlockStatusDto;
 import com.example.algoQuestSV.Dto.Topic.TopicCreationDto;
 import com.example.algoQuestSV.Dto.Topic.TopicUpdateDto;
-import com.example.algoQuestSV.Entity.Quest;
-import com.example.algoQuestSV.Entity.Topic;
-import com.example.algoQuestSV.Entity.User;
+import com.example.algoQuestSV.Entity.*;
+import com.example.algoQuestSV.Repository.QuestProgressRepository;
 import com.example.algoQuestSV.Repository.QuestsRepository;
 import com.example.algoQuestSV.Repository.TopicsRepository;
 import com.example.algoQuestSV.Repository.UsersRepository;
@@ -15,8 +15,11 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 @Service
 public class TopicService {
@@ -28,6 +31,9 @@ public class TopicService {
 
     @Autowired
     QuestsRepository questsRepository;
+
+    @Autowired
+    private QuestProgressRepository progressRepository;
 
     //Lấy chỉ mục mới
     private Integer getNewIndex(){
@@ -187,6 +193,59 @@ public class TopicService {
                 .status(200)
                 .message("Không tìm thấy chương tương ứng")
                 .data(optTopic.get())
+                .build();
+    }
+
+    public ApiResponseDto<List<QuestUnlockStatusDto>> getQuestsByTopicWithStatus(String topicId, String userId) {
+        // 1. Lấy User để kiểm tra level
+        User user = usersRepository.findById(userId)
+                .orElseThrow(() -> new RuntimeException("User not found"));
+
+        // 2. Lấy danh sách tất cả Quest thuộc Topic
+        List<Quest> questsInTopic = questsRepository.findByTopicIdIdOrderByIndexOrderAsc(topicId);
+
+        // 3. Lấy danh sách các Quest ID mà User đã hoàn thành
+        List<QuestProgress> completedProgress = progressRepository.findByUserId(userId);
+        Set<String> completedQuestIds = completedProgress.stream()
+                .filter(QuestProgress::getIsCompleted)
+                .map(p -> p.getQuest().getId())
+                .collect(Collectors.toSet());
+
+        List<QuestUnlockStatusDto> result = new ArrayList<>();
+
+        for (Quest quest : questsInTopic) {
+            boolean isUnlocked = true;
+
+            // 4. Kiểm tra từng điều kiện tiên quyết (Prerequisites)
+            for (QuestPrerequisite pre : quest.getPrerequisites()) {
+                // Kiểm tra điều kiện về Quest khác
+                if (pre.getRequiredQuest() != null) {
+                    if (!completedQuestIds.contains(pre.getRequiredQuest().getId())) {
+                        isUnlocked = false;
+                        break;
+                    }
+                }
+
+                // Kiểm tra điều kiện về Level
+                if (pre.getRequiredLevel() != null) {
+                    if (user.getLevel() < pre.getRequiredLevel()) {
+                        isUnlocked = false;
+                        break;
+                    }
+                }
+            }
+
+            result.add(QuestUnlockStatusDto.builder()
+                    .quest(quest)
+                    .isUnlocked(isUnlocked)
+                    .isCompleted(completedQuestIds.contains(quest.getId()))
+                    .build());
+        }
+
+        return ApiResponseDto.<List<QuestUnlockStatusDto>>builder()
+                .status(200)
+                .message("Lấy danh sách Quest với trạng thái mở khóa thành công")
+                .data(result)
                 .build();
     }
 };

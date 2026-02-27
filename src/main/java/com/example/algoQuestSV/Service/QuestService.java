@@ -83,6 +83,8 @@ public class QuestService {
         try{
             Quest quest = Quest.builder()
                 .title(req.getTitle())
+                    .type(req.getType())
+                    .questNum(req.getQuestNum())
                 .description(req.getDescription())
                 .createdBy(operator)
                 .updatedBy(operator)
@@ -146,6 +148,10 @@ public class QuestService {
                         .build();
             }
             quest.setTitle(req.getTitle());
+        }
+
+        if(req.getQuestNum() != null){
+            quest.setQuestNum(req.getQuestNum());
         }
 
         if(req.getStatus() != null){
@@ -216,8 +222,6 @@ public class QuestService {
                         QuestLesson ql = new QuestLesson();
                         ql.setQuest(quest);
                         ql.setLesson(lesson);
-                        ql.setPoint(item.getPoint());
-                        ql.setExp(item.getExp());
                         quest.getLessons().add(ql);
                     });
                 }

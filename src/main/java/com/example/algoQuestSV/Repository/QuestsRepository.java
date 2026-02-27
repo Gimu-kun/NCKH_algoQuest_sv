@@ -6,6 +6,7 @@ import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
+import java.util.List;
 import java.util.Optional;
 
 public interface QuestsRepository extends JpaRepository<Quest,String> {
@@ -16,4 +17,6 @@ public interface QuestsRepository extends JpaRepository<Quest,String> {
     @Modifying
     @Query("UPDATE Quest q SET q.indexOrder = :indexOrder WHERE q.id = :id")
     void updateIndexOrder(@Param("id") String id, @Param("indexOrder") Integer indexOrder);
+
+    List<Quest> findByTopicIdIdOrderByIndexOrderAsc(String topicId);
 }
