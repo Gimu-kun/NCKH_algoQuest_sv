@@ -6,11 +6,14 @@ import com.example.algoQuestSV.Dto.Quest.QuestContentAdjustDto;
 import com.example.algoQuestSV.Dto.Quest.QuestCreationDto;
 import com.example.algoQuestSV.Dto.Quest.QuestUpdateDto;
 import com.example.algoQuestSV.Entity.Quest;
+import com.example.algoQuestSV.Entity.QuestProgress;
 import com.example.algoQuestSV.Repository.QuestsRepository;
 import com.example.algoQuestSV.Service.QuestService;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -30,6 +33,11 @@ public class QuestController {
     @GetMapping("/{id}")
     public ApiResponseDto<Quest> getById(@PathVariable String id){
         return questService.getById(id);
+    }
+
+    @GetMapping("/stage/{stageId}/{userId}")
+    public ApiResponseDto<Quest> getByIdForStage(@PathVariable String stageId, @PathVariable String userId){
+        return questService.getByIdForStage(stageId,userId);
     }
 
     @PostMapping

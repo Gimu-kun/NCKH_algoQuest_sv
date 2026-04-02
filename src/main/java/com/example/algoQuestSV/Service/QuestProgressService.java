@@ -16,20 +16,20 @@ import java.util.List;
 @RequiredArgsConstructor
 public class QuestProgressService {
 
-    private final QuestProgressRepository progressRepository;
-    private final UsersRepository userRepository;
-    private final QuestsRepository questRepository;
+    private final QuestProgressRepository progressRepo;
+    private final UsersRepository userRepo;
+    private final QuestsRepository questRepo;
 
     public List<QuestProgress> getAllProgressByUser(String userId) {
-        return progressRepository.findByUserId(userId);
+        return progressRepo.findByUserId(userId);
     }
 
     @Transactional
     public QuestProgress updateOrCreateProgress(String userId, String questId, boolean completed, int exp, int wood, int stone) {
-        QuestProgress progress = progressRepository.findByUserIdAndQuestId(userId, questId)
+        QuestProgress progress = progressRepo.findByUserIdAndQuestId(userId, questId)
                 .orElseGet(() -> {
-                    User user = userRepository.findById(userId).orElseThrow(() -> new RuntimeException("User not found"));
-                    Quest quest = questRepository.findById(questId).orElseThrow(() -> new RuntimeException("Quest not found"));
+                    User user = userRepo.findById(userId).orElseThrow(() -> new RuntimeException("User not found"));
+                    Quest quest = questRepo.findById(questId).orElseThrow(() -> new RuntimeException("Quest not found"));
                     return QuestProgress.builder()
                             .user(user)
                             .quest(quest)
@@ -50,7 +50,7 @@ public class QuestProgressService {
             // Logic lên cấp đơn giản (Ví dụ: mỗi 1000 exp lên 1 cấp)
             user.setLevel(1 + (user.getExp() / 1000));
 
-            userRepository.save(user);
+            userRepo.save(user);
         }
 
         progress.setIsCompleted(completed);
@@ -58,11 +58,15 @@ public class QuestProgressService {
         progress.setEarnedWood(progress.getEarnedWood() + wood);
         progress.setEarnedStone(progress.getEarnedStone() + stone);
 
-        return progressRepository.save(progress);
+        return progressRepo.save(progress);
     }
 
     @Transactional
     public void deleteProgress(String id) {
-        progressRepository.deleteById(id);
+        progressRepo.deleteById(id);
+    }
+
+    public List<QuestProgress> getQuestHistory(String userId, String questId) {
+        return progressRepo.findByUserIdAndQuestIdOrderByCreatedAtDesc(userId, questId);
     }
 }

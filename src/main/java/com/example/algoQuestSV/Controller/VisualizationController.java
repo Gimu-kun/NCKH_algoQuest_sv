@@ -1,10 +1,7 @@
 package com.example.algoQuestSV.Controller;
 
 import com.example.algoQuestSV.Dto.Api.ApiResponseDto;
-import com.example.algoQuestSV.Dto.Visualization.QuestVisualLinkRequestDto;
-import com.example.algoQuestSV.Dto.Visualization.VisualBudgetSubmitRequestDto;
-import com.example.algoQuestSV.Dto.Visualization.VisualSubmitRequestDto;
-import com.example.algoQuestSV.Dto.Visualization.VisualizationRequestDto;
+import com.example.algoQuestSV.Dto.Visualization.*;
 import com.example.algoQuestSV.Entity.QuestVisualization;
 import com.example.algoQuestSV.Service.VisualizationService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -53,5 +50,20 @@ public class VisualizationController {
     public ResponseEntity<ApiResponseDto<?>> submitBudgetChallenge(@RequestBody VisualBudgetSubmitRequestDto dto) {
         ApiResponseDto<?> result = visualService.submitBudgetChallenge(dto);
         return ResponseEntity.status(result.getStatus()).body(result);
+    }
+
+    @PostMapping("/submit-code")
+    public ResponseEntity<ApiResponseDto<?>> submitCode(@RequestBody VisualCodeSubmitRequestDto dto) {
+        try {
+            ApiResponseDto<?> result = visualService.submitCodeChallenge(dto);
+
+            // LUÔN trả về ResponseEntity.ok() để Axios đi vào nhánh .then() ở Frontend
+            // Trạng thái đúng/sai nằm bên trong body (result.status)
+            return ResponseEntity.ok(result);
+
+        } catch (Exception e) {
+            // Chỉ những lỗi hệ thống thực sự (như NullPointer, Database tèo) mới trả về 500
+            return ResponseEntity.status(500).body(new ApiResponseDto<>(500, "System Error", null, null));
+        }
     }
 }

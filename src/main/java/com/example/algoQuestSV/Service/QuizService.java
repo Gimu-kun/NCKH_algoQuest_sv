@@ -3,6 +3,7 @@ package com.example.algoQuestSV.Service;
 import com.example.algoQuestSV.Dto.Quiz.*;
 import com.example.algoQuestSV.Entity.*;
 import com.example.algoQuestSV.Repository.*;
+import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,6 +11,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -84,7 +86,7 @@ public class QuizService {
             Object correctAnswer = null;
             String qId = ansDto.getQuestionId();
             String type = ansDto.getQuestionType().toUpperCase();
-
+            Question question = questionRepo.findById(qId).orElseThrow(() -> new RuntimeException("Không tìm thấy câu hỏi tương ứng: " + qId));
             // Logic chấm điểm (MCQ, MP, FN, FS, FNS)
             switch (type) {
                 case "MCQ":
@@ -130,6 +132,7 @@ public class QuizService {
 
             if (isCorrect) {
                 correctCount++;
+                question.setCorrectCount(question.getCorrectCount()+1);
                 if (qq != null) {
                     currentTotalExp += (qq.getExp() != null ? qq.getExp().intValue() : 0);
                     currentTotalPoint += (qq.getPoint() != null ? qq.getPoint().intValue() : 0);
@@ -137,7 +140,11 @@ public class QuizService {
                     currentTotalStone += (qq.getStone() != null ? qq.getStone() : 0);
                     currentTotalWood += (qq.getWood() != null ? qq.getWood() : 0);
                 }
+            }else{
+                question.setIncorrectCount(question.getIncorrectCount()+1);
             }
+
+            questionRepo.save(question);
 
             details.add(QuizResultDetail.builder()
                     .questionId(qId)
@@ -217,5 +224,73 @@ public class QuizService {
                 .user(user)           // Trả về thông tin User đã cập nhật ví
                 .details(details)
                 .build();
+    }
+
+    public QuestAnswerStorage getReviewDetail(String progressId) {
+        return storageRepo.findByQuestProgressId(progressId)
+                .orElseThrow(() -> new RuntimeException("Không tìm thấy dữ liệu chi tiết cho phiên chơi này!"));
+    }
+
+    public ReviewDetailResponse getFullReviewDetail(String progressId) {
+        // 1. Lấy dữ liệu snapshot từ Storage
+        QuestAnswerStorage storage = storageRepo.findByQuestProgressId(progressId)
+                .orElseThrow(() -> new RuntimeException("Không tìm thấy dữ liệu bài làm"));
+
+        try {
+            // 2. Parse JSON string thành List các Object tạm thời
+            List<Map<String, Object>> results = objectMapper.readValue(storage.getResultDetail(), new TypeReference<>() {});
+            List<Map<String, Object>> userChoices = objectMapper.readValue(storage.getAnswerData(), new TypeReference<>() {});
+            System.out.println(results);
+            System.out.println(userChoices);
+            List<ReviewDetailResponse.QuestionReviewDto> details = new ArrayList<>();
+
+            // 3. Với mỗi câu hỏi trong bài làm, lấy thêm thông tin từ QuestionsRepository
+            for (Map<String, Object> res : results) {
+                String qId = (String) res.get("questionId");
+                Question question = questionRepo.findById(qId).orElse(null);
+
+                if (question != null) {
+                    // Tìm lựa chọn của người dùng trong mảng userChoices
+                    Map<String, Object> choice = userChoices.stream()
+                            .filter(c -> c.get("questionId").equals(qId))
+                            .findFirst().orElse(new HashMap<>());
+
+                    Object isCorrectObj = res.get("correct");
+                    System.out.println(isCorrectObj);
+                    boolean isCorrectValue = false; // Mặc định là false nếu null
+
+                    if (isCorrectObj instanceof Boolean) {
+                        isCorrectValue = (Boolean) isCorrectObj;
+                    } else if (isCorrectObj instanceof String) {
+                        isCorrectValue = Boolean.parseBoolean((String) isCorrectObj);
+                    }
+
+                    ReviewDetailResponse.QuestionReviewDto dto = ReviewDetailResponse.QuestionReviewDto.builder()
+                            .question(question)
+                            .isCorrect(isCorrectValue)
+                            .correctAnswer(res.get("correctAnswer"))
+                            .userChoice(choice)
+                            .options(getQuestionOptions(question))
+                            .build();
+                    details.add(dto);
+                }
+            }
+
+            return ReviewDetailResponse.builder()
+                    .progress(storage.getQuestProgress())
+                    .details(details)
+                    .build();
+
+        } catch (Exception e) {
+            throw new RuntimeException("Lỗi xử lý dữ liệu review: " + e.getMessage());
+        }
+    }
+
+    // Hàm bổ trợ lấy Options nếu là MCQ
+    private List<Object> getQuestionOptions(Question q) {
+        if ("MCQ".equalsIgnoreCase(q.getQuestionType().toString())) {
+            return new ArrayList<>(mcqRepo.findByQuestionId(q.getId()));
+        }
+        return null;
     }
 }

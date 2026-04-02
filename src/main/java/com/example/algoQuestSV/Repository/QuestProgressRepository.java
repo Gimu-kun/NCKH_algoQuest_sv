@@ -26,4 +26,9 @@ public interface QuestProgressRepository extends JpaRepository<QuestProgress, St
             "FROM QuestProgress p " +
             "WHERE p.user.id = :userId AND p.quest.id = :questId AND p.isCompleted = true")
     MaxRewardProjection findMaxRewardsByUserIdAndQuestId(String userId, String questId);
+    List<QuestProgress> findByUserIdAndQuestIdOrderByCreatedAtDesc(String userId, String questId);
+
+    boolean existsByUserIdAndQuestId(String userId, String stageId);
+
+    QuestProgress findTopByUserIdAndQuestIdOrderByCreatedAtDesc(String userId, String stageId);
 }

@@ -41,6 +41,12 @@ public class Question {
     @Column(name = "index_order")
     private Integer indexOrder;
 
+    @Column(name = "correct_count")
+    private Integer correctCount;
+
+    @Column(name = "incorrect_count")
+    private Integer incorrectCount;
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JsonIgnoreProperties({
             "passwords", "streaks", "hibernateLazyInitializer",

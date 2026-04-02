@@ -24,6 +24,9 @@ public class QuestQuestion {
     @JoinColumn(name = "question_id")
     private Question question;
 
+    @Column(name = "default_mark")
+    private Boolean defaultMark;
+
     private Integer point;
     private Integer exp;
     private Integer gold;
