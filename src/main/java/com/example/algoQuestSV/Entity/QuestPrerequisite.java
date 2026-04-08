@@ -26,6 +26,7 @@ public class QuestPrerequisite {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "required_quest_id")
+    @JsonIgnoreProperties({"prerequisites"})
     private Quest requiredQuest;
 
     @Column(name = "required_level")
