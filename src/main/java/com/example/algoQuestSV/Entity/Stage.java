@@ -19,7 +19,7 @@ public class Stage {
     private Integer stageNum;
 
     @Column(name = "phrase_id")
-    private Integer phraseId;
+    private Long phraseId;
 
     @Enumerated(EnumType.STRING)
     private StageType stageType;

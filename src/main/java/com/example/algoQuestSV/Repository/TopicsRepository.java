@@ -19,4 +19,6 @@ public interface TopicsRepository extends JpaRepository<Topic,String> {
     boolean existsByTitleAndIdNot(String title, String id);
 
     Optional<Topic> findById(String id);
+
+    Optional<Topic> findByIndexOrder(int indexOrder);
 }

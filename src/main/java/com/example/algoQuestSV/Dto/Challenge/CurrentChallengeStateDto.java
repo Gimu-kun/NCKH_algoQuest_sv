@@ -8,4 +8,5 @@ public class CurrentChallengeStateDto {
     private Long progressId;
     private Integer currentStage;
     private Integer remainLife;
+    private Long sessionId;
 }

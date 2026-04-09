@@ -1,6 +1,7 @@
 package com.example.algoQuestSV.Entity;
 
 import jakarta.persistence.*;
+import lombok.Builder;
 import lombok.Data;
 
 import java.time.LocalDateTime;
@@ -8,16 +9,17 @@ import java.time.LocalDateTime;
 @Entity
 @Table(name = "user_stage_questions")
 @Data
+@Builder
 public class UserStageQuestions {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @Column(name = "progress_id")
-    private Integer progressId;
+    private Long progressId;
 
     @Column(name = "question_id")
-    private Integer questionId;
+    private String questionId;
 
     @Column(name = "user_answer")
     private String userAnswer;

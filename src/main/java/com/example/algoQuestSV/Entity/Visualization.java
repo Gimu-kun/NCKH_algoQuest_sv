@@ -32,6 +32,12 @@ public class Visualization {
     @Column(name = "template_code", columnDefinition = "text")
     private String templateCode;
 
+    @Column(name = "pass_count")
+    private Integer passCount;
+
+    @Column(name = "fail_count")
+    private Integer failCount;
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "created_by")
     private User createdBy;

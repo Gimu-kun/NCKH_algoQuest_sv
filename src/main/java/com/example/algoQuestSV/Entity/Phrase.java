@@ -21,10 +21,10 @@ public class Phrase {
     private Integer endStage;
 
     @Column(name = "min_diff")
-    private Integer minDiff;
+    private Float minDiff;
 
     @Column(name = "max_diff")
-    private Integer maxDiff;
+    private Float maxDiff;
 
     @Column(name = "bloom_distribution")
     private String bloomDistribution;

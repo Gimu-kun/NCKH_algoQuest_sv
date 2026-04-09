@@ -8,4 +8,8 @@ import java.util.List;
 
 public interface UserStageProgressRepository extends JpaRepository<UserStageProgress, Long> {
     UserStageProgress findAllBySessionIdAndStatusOrderByIdDesc(Long id, ChallengeStatus challengeStatus);
+
+    List<UserStageProgress> findAllBySessionId(Long sessionId);
+
+    UserStageProgress findBySessionIdAndStatus(Long sessionId, ChallengeStatus challengeStatus);
 }

@@ -9,4 +9,7 @@ public enum VisualizationType {
     fifo, //Queues
     filo, //Stack
     btree, //BinaryTree
+    BSEARCH,
+    BBSORT,
+    SELECSORT
 }
