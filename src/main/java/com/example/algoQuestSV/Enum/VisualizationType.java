@@ -11,5 +11,6 @@ public enum VisualizationType {
     btree, //BinaryTree
     BSEARCH,
     BBSORT,
-    SELECSORT
+    SELECSORT,
+    COMPLEXITY
 }

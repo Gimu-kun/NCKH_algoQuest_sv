@@ -14,13 +14,29 @@ public interface VisualizationsRepository extends JpaRepository<Visualization,St
     SELECT * FROM visualizations v
     WHERE (:minDiff <= COALESCE(1.0 - CAST(pass_count AS float) / NULLIF(pass_count + fail_count,0), 0.5))
     AND (COALESCE(1.0 - CAST(pass_count AS float) / NULLIF(pass_count + fail_count,0), 0.5) <= :maxDiff)
-    AND (COALESCE(:excludeIds, NULL) IS NULL OR v.id NOT IN (:excludeIds))
+    AND v.id NOT IN (:excludeIds) AND v.difficulty = :difficulty
     ORDER BY RANDOM()
     LIMIT 1
     """, nativeQuery = true)
-    Visualization findRandomByDifficultyRange(
-            @Param("minDiff") float minDiff,
-            @Param("maxDiff") float maxDiff,
-            @Param("excludeIds") List<String> excludeIds
+        Visualization findWithExclude(
+                float minDiff,
+                float maxDiff,
+                int difficulty,
+                List<String> excludeIds
+    );
+
+    @Query(value = """
+    SELECT * FROM visualizations v
+    WHERE (:minDiff <= COALESCE(1.0 - CAST(pass_count AS float) / NULLIF(pass_count + fail_count,0), 0.5))
+    AND (COALESCE(1.0 - CAST(pass_count AS float) / NULLIF(pass_count + fail_count,0), 0.5) <= :maxDiff)
+    AND v.difficulty = :difficulty
+    ORDER BY RANDOM()
+    LIMIT 1
+    """, nativeQuery = true)
+        Visualization findWithoutExclude(
+                float minDiff,
+                float maxDiff,
+                int difficulty
     );
 }
+

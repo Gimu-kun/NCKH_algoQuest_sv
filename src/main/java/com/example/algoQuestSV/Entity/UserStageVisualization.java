@@ -1,13 +1,17 @@
 package com.example.algoQuestSV.Entity;
 
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Entity
 @Table(name = "user_stage_visualization")
 @Data
 @Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class UserStageVisualization {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -27,4 +31,7 @@ public class UserStageVisualization {
 
     @Column(name = "incorrect_operation")
     private Integer incorrectOp;
+
+    @Column(name = "selected_answer")
+    private String selectedAnswer;
 }

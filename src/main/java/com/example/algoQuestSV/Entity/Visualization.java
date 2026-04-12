@@ -52,6 +52,8 @@ public class Visualization {
     @Column(name = "updated_at")
     private LocalDateTime updatedAt;
 
+    private Integer difficulty;
+
     @PrePersist
     protected void onCreate() {
         createdAt = LocalDateTime.now();

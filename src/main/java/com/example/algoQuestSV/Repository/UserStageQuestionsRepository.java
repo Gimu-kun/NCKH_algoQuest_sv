@@ -7,4 +7,6 @@ import java.util.List;
 
 public interface UserStageQuestionsRepository extends JpaRepository<UserStageQuestions, Long> {
     List<UserStageQuestions> findAllByProgressId(Long id);
+
+    UserStageQuestions findByProgressIdAndQuestionId(Long progressId, String questionId);
 }
