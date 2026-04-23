@@ -40,9 +40,9 @@ public class VisualizationController {
                 .build());
     }
 
-    @PostMapping("/submit")
-    public ResponseEntity<ApiResponseDto<?>> submitChallenge(@RequestBody VisualSubmitRequestDto dto) {
-        ApiResponseDto<?> result = visualService.submitVisualChallenge(dto);
+    @PostMapping("/submit/{userId}/{questId}")
+    public ResponseEntity<ApiResponseDto<?>> submitChallenge(@PathVariable String userId, @PathVariable String questId,@RequestBody VisualizationSubmitDto dto) {
+        ApiResponseDto<?> result = visualService.submitVisualChallenge(userId, questId, dto);
         return ResponseEntity.status(result.getStatus()).body(result);
     }
 

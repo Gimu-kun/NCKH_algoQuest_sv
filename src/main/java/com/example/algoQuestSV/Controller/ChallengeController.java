@@ -2,10 +2,10 @@ package com.example.algoQuestSV.Controller;
 
 import com.example.algoQuestSV.Dto.Api.ApiResponseDto;
 import com.example.algoQuestSV.Dto.Challenge.*;
+import com.example.algoQuestSV.Dto.Visualization.VisualizationSubmitDto;
 import com.example.algoQuestSV.Service.ChallengeService;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;

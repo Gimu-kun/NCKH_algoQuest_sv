@@ -1,4 +1,4 @@
-package com.example.algoQuestSV.Dto.Challenge;
+package com.example.algoQuestSV.Dto.Visualization;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;

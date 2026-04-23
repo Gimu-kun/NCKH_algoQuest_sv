@@ -74,9 +74,9 @@ public class VisualizationService {
     }
 
     @Transactional
-    public ApiResponseDto<User> submitVisualChallenge(VisualSubmitRequestDto dto) {
+    public ApiResponseDto<User> submitVisualChallenge(String userId, String questId ,VisualizationSubmitDto dto) {
         // 1. Tìm bản ghi liên kết giữa Quest và Visualization
-        QuestVisualization qv = questVisualRepo.findByQuestIdAndVisualizationId(dto.getQuestId(), dto.getVisualizationId())
+        QuestVisualization qv = questVisualRepo.findByQuestIdAndVisualizationId(questId, dto.getVisualizationId())
                 .orElseThrow(() -> new RuntimeException("Không tìm thấy thử thách này trong ải!"));
 
         try {
@@ -91,7 +91,7 @@ public class VisualizationService {
             String correctAnswer = config.get("target").asText();
 
             // 4. Kiểm tra User
-            User user = usersRepository.findById(dto.getUserId()).orElseThrow();
+            User user = usersRepository.findById(userId).orElseThrow();
 
             // 4. Kiểm tra đáp án người dùng gửi lên
             if (!correctAnswer.equalsIgnoreCase(dto.getSelectedAnswer())) {

@@ -20,6 +20,20 @@ public class BattleGameController {
     private SimpMessagingTemplate messagingTemplate;
 
     private static final Map<String, List<Map<String, Object>>> lobbyData = new ConcurrentHashMap<>();
+    private Map<String, List<Map<String, Object>>> submissionData = new ConcurrentHashMap<>();
+
+    private Map<String, Object> getMockProblem() {
+        Map<String, Object> problem = new HashMap<>();
+        problem.put("title", "Tìm số lớn nhất trong mảng");
+        problem.put("description", "Cho mảng số nguyên, trả về giá trị lớn nhất.");
+        problem.put("template", "public int solution(int[] arr) {\n  // Code ở đây\n}");
+        problem.put("testCases", List.of(
+                Map.of("input", "[1, 5, 3]", "output", "5"),
+                Map.of("input", "[-10, -5, 0]", "output", "0"),
+                Map.of("input", "[-20, 20, 16]", "output", "20")
+        ));
+        return problem;
+    }
 
     // Xử lý các sự kiện chung trong phòng (Join, Config, Đổi đội, Start)
     @MessageMapping("/battle/{roomId}")
@@ -43,6 +57,39 @@ public class BattleGameController {
                 newPlayer.put("isHost", players.isEmpty());
 
                 players.add(newPlayer);
+            }
+        }
+
+        if ("START_REQUEST".equals(message.getType())) {
+            message.setType("START_GAME");
+            // Đính kèm đề thi vào tin nhắn
+            message.setAdditionalData(Map.of(
+                    "problem", getMockProblem(),
+                    "startTime", System.currentTimeMillis()
+            ));
+        }
+
+        if ("SUBMIT_CODE".equals(message.getType())) {
+            List<Map<String, Object>> results = submissionData.computeIfAbsent(roomId, k -> new ArrayList<>());
+
+            // Lưu kết quả của người gửi
+            Map<String, Object> userResult = new HashMap<>(message.getAdditionalData());
+            userResult.put("name", message.getSender());
+            results.add(userResult);
+
+            // Giả sử phòng có 2 người
+            if (results.size() >= 2) {
+                // Logic so sánh: Ai đúng nhiều hơn thắng, nếu bằng nhau ai làm nhanh hơn thắng
+                // Ở đây ta có thể gắn flag isWinner cho người thắng
+                message.setType("BATTLE_RESULT");
+                message.setAdditionalData(Map.of("results", results));
+
+                // Sau khi gửi xong có thể xóa dữ liệu phòng để giải phóng bộ nhớ
+                submissionData.remove(roomId);
+                return message; // Gửi đến tất cả mọi người trong kênh /topic/room/{roomId}
+            } else {
+                // Chỉ mới có 1 người nộp, chưa trả về tin nhắn chung hoặc trả về tin nhắn "đợi"
+                return null;
             }
         }
 

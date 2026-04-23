@@ -2,6 +2,7 @@ package com.example.algoQuestSV.Service;
 
 import com.example.algoQuestSV.Dto.Api.ApiResponseDto;
 import com.example.algoQuestSV.Dto.Challenge.*;
+import com.example.algoQuestSV.Dto.Visualization.VisualizationSubmitDto;
 import com.example.algoQuestSV.Entity.*;
 import com.example.algoQuestSV.Enum.BloomType;
 import com.example.algoQuestSV.Enum.ChallengeStatus;
